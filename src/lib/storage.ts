@@ -50,6 +50,9 @@ export type DailyLog = {
     maghrib: boolean;
     isha: boolean;
     witr: boolean;
+    tahajjud?: boolean;
+    ishraq?: boolean;
+    chasht?: boolean;
   };
 };
 
@@ -120,11 +123,14 @@ export const mockDB = {
     return d ? JSON.parse(d) : {};
   },
 
-  toggleDaily: (date: string, prayer: keyof QazaLog) => {
+  toggleDaily: (date: string, prayer: string) => {
      // Note: 'prayer' needs to be cast to the specific keys
      const logs = mockDB.getDailyLogs();
      if (!logs[date]) {
-       logs[date] = { fajr: false, dhuhr: false, asr: false, maghrib: false, isha: false, witr: false };
+       logs[date] = { 
+         fajr: false, dhuhr: false, asr: false, maghrib: false, isha: false, witr: false,
+         tahajjud: false, ishraq: false, chasht: false
+       };
      }
      // @ts-ignore
      logs[date][prayer] = !logs[date][prayer];

@@ -15,7 +15,7 @@ interface AppContextType {
   logout: () => void;
   saveProfile: (p: Profile) => Promise<void>;
   updateQaza: (q: QazaLog) => Promise<void>;
-  toggleDailyPrayer: (date: string, prayer: keyof QazaLog) => void;
+  toggleDailyPrayer: (date: string, prayer: keyof QazaLog | 'tahajjud' | 'ishraq' | 'chasht') => void;
   decrementQaza: (prayer: keyof QazaLog) => void;
 }
 
@@ -295,12 +295,16 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const toggleDailyPrayer = async (date: string, prayer: keyof QazaLog) => {
+  const toggleDailyPrayer = async (date: string, prayer: keyof QazaLog | 'tahajjud' | 'ishraq' | 'chasht') => {
     if (prayer === 'performed') return;
     
     // Optimistic
     const newLogs = { ...dailyLogs };
-    if (!newLogs[date]) newLogs[date] = { fajr: false, dhuhr: false, asr: false, maghrib: false, isha: false, witr: false };
+    if (!newLogs[date]) newLogs[date] = { 
+        fajr: false, dhuhr: false, asr: false, maghrib: false, isha: false, witr: false,
+        tahajjud: false, ishraq: false, chasht: false
+    };
+    
     // @ts-ignore
     newLogs[date][prayer] = !newLogs[date][prayer];
     setDailyLogs(newLogs);
