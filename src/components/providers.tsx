@@ -177,7 +177,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
             email: user.email,
             date_of_birth: p.date_of_birth,
             gender: p.gender,
-            puberty_age: p.puberty_age
+            puberty_age: p.puberty_age,
+            period_duration: p.period_duration,
+            safe_mode: p.safe_mode
         });
 
         // Calculate Initial Qaza if needed
@@ -192,10 +194,15 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
             let totalDays = (pubertyDate > now) ? 0 : Math.ceil(Math.abs(now.getTime() - pubertyDate.getTime()) / (1000 * 60 * 60 * 24));
             
             // --- FEMALE ADJUSTMENT ---
-            // Deduct days for menstruation (Approx 7 days per month = ~23% reduction)
             if (p.gender === 'female' && totalDays > 0) {
-                // Deducting 7 days out of every 30 days roughly
-                const adjustmentFactor = 1 - (7 / 30); 
+                let daysToDeduct = p.period_duration || 7;
+                
+                // Safe Mode: Use minimum period duration (3 days) to ensure coverage (Extra Qaza)
+                if (p.safe_mode) {
+                    daysToDeduct = 3; 
+                }
+
+                const adjustmentFactor = 1 - (daysToDeduct / 30); 
                 totalDays = Math.floor(totalDays * adjustmentFactor);
             }
 
@@ -225,7 +232,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
              
              // --- FEMALE ADJUSTMENT (Mock) ---
              if (p.gender === 'female' && totalDays > 0) {
-                const adjustmentFactor = 1 - (7 / 30); 
+                let daysToDeduct = p.period_duration || 7;
+                
+                // Safe Mode: Use minimum period duration (3 days) to ensure coverage (Extra Qaza)
+                if (p.safe_mode) {
+                    daysToDeduct = 3; 
+                }
+
+                const adjustmentFactor = 1 - (daysToDeduct / 30); 
                 totalDays = Math.floor(totalDays * adjustmentFactor);
              }
 

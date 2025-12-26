@@ -19,6 +19,8 @@ export type Profile = {
   date_of_birth: string; // YYYY-MM-DD
   puberty_age: number;
   gender: 'male' | 'female';
+  period_duration?: number; // Days (5, 6, 7)
+  safe_mode?: boolean; // Extra precaution
   calculated_start_date?: string;
 };
 

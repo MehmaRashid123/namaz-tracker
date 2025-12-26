@@ -9,6 +9,8 @@ create table public.profiles (
   date_of_birth date,
   gender text check (gender in ('male', 'female')),
   puberty_age int,
+  period_duration int,
+  safe_mode boolean default false,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 

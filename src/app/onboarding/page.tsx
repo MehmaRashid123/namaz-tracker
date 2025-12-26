@@ -12,6 +12,8 @@ export default function OnboardingPage() {
   const [dob, setDob] = useState('');
   const [gender, setGender] = useState<'male' | 'female'>('male');
   const [pubertyAge, setPubertyAge] = useState(15);
+  const [periodDuration, setPeriodDuration] = useState(7);
+  const [safeMode, setSafeMode] = useState(false);
 
   const handleGenderChange = (g: 'male' | 'female') => {
     setGender(g);
@@ -28,7 +30,9 @@ export default function OnboardingPage() {
       user_id: user.id,
       date_of_birth: dob,
       gender,
-      puberty_age: pubertyAge
+      puberty_age: pubertyAge,
+      period_duration: periodDuration,
+      safe_mode: safeMode
     });
     
     router.push('/');
@@ -113,6 +117,50 @@ export default function OnboardingPage() {
               onChange={(e) => setPubertyAge(parseInt(e.target.value))}
             />
           </div>
+
+          {/* Female Specific Options */}
+          {gender === 'female' && (
+            <div className="space-y-4 pt-4 border-t border-slate-100 animate-in fade-in slide-in-from-top-2">
+              <h3 className="font-semibold text-slate-700">Period Settings</h3>
+              
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">Average Days per Month</label>
+                <div className="flex gap-3">
+                  {[5, 6, 7].map((days) => (
+                    <button
+                      key={days}
+                      type="button"
+                      onClick={() => setPeriodDuration(days)}
+                      className={`flex-1 py-2 px-3 rounded-lg border transition-all ${
+                        periodDuration === days
+                          ? 'border-emerald-500 bg-emerald-50 text-emerald-700 font-bold ring-2 ring-emerald-500 ring-offset-1'
+                          : 'border-slate-200 text-slate-600 hover:border-slate-300'
+                      }`}
+                    >
+                      {days} Days
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3 bg-orange-50 p-4 rounded-lg border border-orange-100">
+                <div className="flex-1">
+                  <label htmlFor="safemode" className="font-semibold text-orange-800 block text-sm">Safe Mode (Extra Qaza)</label>
+                  <p className="text-xs text-orange-700 mt-0.5">Calculates with minimal deduction (3 days) for precaution.</p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    id="safemode" 
+                    className="sr-only peer"
+                    checked={safeMode}
+                    onChange={(e) => setSafeMode(e.target.checked)}
+                  />
+                  <div className="w-11 h-6 bg-orange-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
+                </label>
+              </div>
+            </div>
+          )}
 
           <button
             type="submit"
